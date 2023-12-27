@@ -1510,7 +1510,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
     int nf=opt->ionoopt==IONOOPT_IFLC?1:opt->nf;
     double RefRovxyz[3],RefRovblh[3],dRefRovxyz[3],movecheckblh[3];
     double dxyz1[3], dxyz2[3], dxyz3[3], denu1[3], denu2[3], denu3[3];
-    double dxyz[3]={0},denu[3]={0},pos[3]={0},,P[9],Q[9];
+    double dxyz[3]={0},denu[3]={0},pos[3]={0},P[9],Q[9];
     int randh,randv,ha_temp,va_temp;
     
     trace(3,"relpos  : nx=%d nu=%d nr=%d\n",rtk->nx,nu,nr);
