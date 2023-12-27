@@ -1287,6 +1287,11 @@ typedef struct {        /* RTK server type */
     char cmd_reset[MAXRCVCMD]; /* reset command */
     double bl_reset;    /* baseline length to reset (km) */
     lock_t lock;        /* lock flag */
+
+    /*lyj add*/
+	int allepoch;
+	int HAepoch;
+    int VAepoch;
 } rtksvr_t;
 
 typedef struct {        /* GIS data point type */
