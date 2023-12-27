@@ -2638,6 +2638,7 @@ static int decode_aidX3_(rtcm_t* rtcm)
 	int idx = 0;
 	int rcv = 0;
     int ret = decode_aidX3(rtcm->buff, rtcm->len + 3, rtcm->aid_atm, &rtcm->naid_atm, MAXMAC*MAXOBS, &rtcm->tow_atm, &sys, &sync, &idx, &rcv);
+    trace(3,"2222222:%d\n",ret);
     if (ret)
     {
 		if (rtcm->outtype) {
