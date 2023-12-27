@@ -2533,6 +2533,135 @@ static int decode_type4076(rtcm_t *rtcm)
     trace(2,"rtcm3 4076: unsupported message subtype=%d\n",subtype);
     return 0;
 }
+/* 4054 subtype 1 */
+static int decode_aid1__(rtcm_t *rtcm)
+{
+    aid_sol_t* aid_sol = &rtcm->aid_sol;
+    int ret = decode_aid1(rtcm->buff, rtcm->len + 3, aid_sol);
+    if (ret)
+    {
+        if (rtcm->outtype) {
+            sprintf(rtcm->cmccmsgtype + strlen(rtcm->cmccmsgtype), " rcv=%d tow=%6.0f nsat=%2i soltype=%i", aid_sol->id, aid_sol->tow, aid_sol->nsat, aid_sol->type);
+        }
+    }
+    return ret;
+}
+/* 4054 subtype 2 */
+static int decode_aid2__(rtcm_t* rtcm)
+{
+    aid_ppl_t* aid_ppl = &rtcm->aid_ppl;
+    int ret = decode_aid2(rtcm->buff, rtcm->len + 3, aid_ppl);
+    if (ret)
+    {
+        if (rtcm->outtype) {
+			sprintf(rtcm->cmccmsgtype + strlen(rtcm->cmccmsgtype), " rcv=%d tow=%6.0f var=%7.2f hpl=%7.2f vpl=%7.2f", aid_ppl->id, aid_ppl->tow, aid_ppl->pvar, aid_ppl->hpl, aid_ppl->vpl);
+        }
+    }
+    return ret;
+}
+/* 4054 subtype 5 */
+static int decode_aid5__(rtcm_t* rtcm)
+{
+    double blh[3] = { 0 };
+    double tow = 0;
+    int idx = 0;
+    int rcv = 0;
+    int i = 0;
+    int ret = decode_aid5(rtcm->buff, rtcm->len + 3, &idx, &rcv, &tow, blh);
+    if (ret)
+    {
+        if (rtcm->outtype) {
+            sprintf(rtcm->cmccmsgtype + strlen(rtcm->cmccmsgtype), " idx=%d rcv=%d tow=%6.0f", idx, rcv, tow);
+        }
+        for (i = 0; i < MAXMAC; ++i)
+        {
+            if (rtcm->aid_rcv[i].rcv == rcv) break;
+        }
+        if (i < MAXMAC) /* find */
+        {
+            rtcm->aid_rcv[i].tow = tow;
+            rtcm->aid_rcv[i].lat = blh[0] * R2D;
+            rtcm->aid_rcv[i].lon = blh[1] * R2D;
+            rtcm->aid_rcv[i].alt = blh[2];
+        }
+        else if (i == MAXMAC)
+        {
+            for (i = 0; i < MAXMAC; ++i)
+            {
+                if (rtcm->aid_rcv[i].rcv == 0) break;
+            }
+            if (i < MAXMAC)
+            {
+                rtcm->aid_rcv[i].rcv = rcv;
+                rtcm->aid_rcv[i].tow = tow;
+                rtcm->aid_rcv[i].lat = blh[0] * R2D;
+                rtcm->aid_rcv[i].lon = blh[1] * R2D;
+                rtcm->aid_rcv[i].alt = blh[2];
+            }
+        }
+    }
+    return ret;
+}
+/* 4054 subtype X1 */
+static int decode_aidX1_(rtcm_t* rtcm)
+{
+    int sys = 0;
+    int sync = 0;
+    int ret = decode_aidX1(rtcm->buff, rtcm->len + 3, rtcm->aid_sat, &rtcm->naid_sat, MAXSAT, &rtcm->tow_sat, &sys, &sync);
+    if (ret)
+    {
+        if (rtcm->outtype) {
+			sprintf(rtcm->cmccmsgtype + strlen(rtcm->cmccmsgtype), " nsat=%d tow=%6.0f sys=%i sync=%i", rtcm->naid_sat, rtcm->tow_sat, sys, sync);
+        }
+    }
+    return ret;
+}
+/* 4054 subtype X2 */
+static int decode_aidX2_(rtcm_t* rtcm)
+{
+    int sys = 0;
+    int sync = 0;
+    int ret = decode_aidX2(rtcm->buff, rtcm->len + 3, rtcm->aid_sat, &rtcm->naid_sat, MAXSAT, &rtcm->tow_sat, &sys, &sync);
+    if (ret)
+    {
+        if (rtcm->outtype) {
+			sprintf(rtcm->cmccmsgtype + strlen(rtcm->cmccmsgtype), " nsat=%d tow=%6.0f sys=%i sync=%i", rtcm->naid_sat, rtcm->tow_sat, sys, sync);
+        }
+    }
+    return ret;
+}
+/* 4054 subtype X3 */
+static int decode_aidX3_(rtcm_t* rtcm)
+{
+    int sys = 0;
+    int sync = 0;
+	int idx = 0;
+	int rcv = 0;
+    int ret = decode_aidX3(rtcm->buff, rtcm->len + 3, rtcm->aid_atm, &rtcm->naid_atm, MAXMAC*MAXOBS, &rtcm->tow_atm, &sys, &sync, &idx, &rcv);
+    if (ret)
+    {
+		if (rtcm->outtype) {
+			sprintf(rtcm->cmccmsgtype + strlen(rtcm->cmccmsgtype), " natm=%d tow=%6.0f sys=%i sync=%i idx=%d rcv=%i", rtcm->naid_atm, rtcm->tow_atm, sys, sync, idx, rcv);
+		}
+    }
+	return ret;
+}
+/* 4054 subtype X4 */
+static int decode_aidX4_(rtcm_t* rtcm)
+{
+    int sys = 0;
+    int sync = 0;
+    int idx = 0;
+    int rcv = 0;
+    int ret = decode_aidX4(rtcm->buff, rtcm->len + 3, rtcm->aid_atm, &rtcm->naid_atm, MAXMAC * MAXOBS, &rtcm->tow_atm, &sys, &sync, &idx, &rcv);
+    if (ret)
+    {
+        if (rtcm->outtype) {
+			sprintf(rtcm->cmccmsgtype + strlen(rtcm->cmccmsgtype), " natm=%d tow=%6.0f sys=%i sync=%i idx=%d rcv=%i", rtcm->naid_atm, rtcm->tow_atm, sys, sync, idx, rcv);
+		}
+    }
+    return ret;
+}
 /* decode type 4054: proprietary message CMCC---------------------------------*/
 static int decode_type4054(rtcm_t *rtcm)
 {
