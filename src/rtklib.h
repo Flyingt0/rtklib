@@ -856,6 +856,17 @@ typedef struct {        /* solution type */
     float age;          /* age of differential (s) */
     float ratio;        /* AR ratio factor for valiation */
     float thres;        /* AR ratio threshold for valiation */
+
+    /*lyj add*/
+	double RefRovxyz[3];  
+	double dRefRovenu[3]; 
+    double xyz[3];
+    double enu[3];
+	double HPL;           
+	double VPL;           
+	int HA;
+    int VA;
+	double var;           
 } sol_t;
 
 typedef struct {        /* solution buffer type */

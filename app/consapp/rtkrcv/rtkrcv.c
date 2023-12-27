@@ -644,6 +644,7 @@ static void prstatus(vt_t *vt)
     char tstr[64],s[1024],*p;
     double runtime,rt[3]={0},dop[4]={0},rr[3],bl1=0.0,bl2=0.0;
     double azel[MAXSAT*2],pos[3],vel[3],*del;
+    int allepoch, haepoch, vaepoch;
     
     trace(4,"prstatus:\n");
     
@@ -680,7 +681,7 @@ static void prstatus(vt_t *vt)
     dops(n,azel,0.0,dop);
     
     vt_printf(vt,"\n%s%-28s: %s%s\n",ESC_BOLD,"Parameter","Value",ESC_RESET);
-    vt_printf(vt,"%-28s: %s\n","nrtkTest version","ver 1.0.0");
+    vt_printf(vt,"%-28s: %s\n","nrtkTest version","ver 1.1.0");
     vt_printf(vt,"%-28s: %d\n","rtk server thread",thread);
     vt_printf(vt,"%-28s: %s\n","rtk server state",svrstate[state]);
     vt_printf(vt,"%-28s: %d\n","processing cycle (ms)",cycle);
@@ -735,14 +736,24 @@ static void prstatus(vt_t *vt)
             pos[0]*R2D,pos[1]*R2D,pos[2]);
     ecef2enu(pos,rtk.sol.rr+3,vel);
     vt_printf(vt,"%-28s: %.3f,%.3f,%.3f\n","vel enu (m/s) rover",vel[0],vel[1],vel[2]);
-    vt_printf(vt,"%-28s: %.3f,%.3f,%.3f\n","pos xyz float (m) rover",
+    /*vt_printf(vt,"%-28s: %.3f,%.3f,%.3f\n","pos xyz float (m) rover",
             rtk.x?rtk.x[0]:0,rtk.x?rtk.x[1]:0,rtk.x?rtk.x[2]:0);
     vt_printf(vt,"%-28s: %.3f,%.3f,%.3f\n","pos xyz float std (m) rover",
             rtk.P?SQRT(rtk.P[0]):0,rtk.P?SQRT(rtk.P[1+1*rtk.nx]):0,rtk.P?SQRT(rtk.P[2+2*rtk.nx]):0);
     vt_printf(vt,"%-28s: %.3f,%.3f,%.3f\n","pos xyz fixed (m) rover",
             rtk.xa?rtk.xa[0]:0,rtk.xa?rtk.xa[1]:0,rtk.xa?rtk.xa[2]:0);
     vt_printf(vt,"%-28s: %.3f,%.3f,%.3f\n","pos xyz fixed std (m) rover",
-            rtk.Pa?SQRT(rtk.Pa[0]):0,rtk.Pa?SQRT(rtk.Pa[1+1*rtk.na]):0,rtk.Pa?SQRT(rtk.Pa[2+2*rtk.na]):0);
+            rtk.Pa?SQRT(rtk.Pa[0]):0,rtk.Pa?SQRT(rtk.Pa[1+1*rtk.na]):0,rtk.Pa?SQRT(rtk.Pa[2+2*rtk.na]):0);*/
+    vt_printf(vt,"%-28s: %.3f,%.3f,%.3f\n","pos enu (m) rover",
+            rtk.sol.enu[0],rtk.sol.enu[1],rtk.sol.enu[2]);
+    vt_printf(vt,"%-28s: %.3f,%.3f\n","HPL VPL",
+            rtk.sol.HPL,rtk.sol.VPL);
+    vt_printf(vt,"%-28s: %d,%d\n","HA  VA",
+            rtk.sol.HA,rtk.sol.VA);
+    if (allepoch) 
+        vt_printf(vt,"%-28s: %.2f\%,%.2f\%\n","HARatio  VARatio",haepoch*1.0/allepoch*100,vaepoch*1.0/allepoch*100);
+    else
+        vt_printf(vt,"%-28s: %.2f\%,%.2f\%\n","HARatio  VARatio",0,0);
     vt_printf(vt,"%-28s: %.3f,%.3f,%.3f\n","pos xyz (m) base",
             rtk.rb[0],rtk.rb[1],rtk.rb[2]);
     if (norm(rtk.rb,3)>0.0) ecef2pos(rtk.rb,pos); else pos[0]=pos[1]=pos[2]=0.0;
