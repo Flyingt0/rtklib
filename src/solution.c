@@ -1144,6 +1144,7 @@ static int outecef(uint8_t *buff, const char *s, const sol_t *sol,
     const char *sep=opt2sep(opt);
     char *p=(char *)buff;
     char *soltype;
+    double pos[3],P[9],Q[9];
     
     trace(3,"outecef:\n");
 
