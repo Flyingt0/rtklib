@@ -55,6 +55,9 @@ extern "C" {
 #define EXPORT
 #endif
 
+#include "cmcc_aid.h"
+#include "rtcm_buff.h"
+
 /* constants -----------------------------------------------------------------*/
 
 #define VER_RTKLIB  "2.4.3"             /* library version */
@@ -914,6 +917,7 @@ typedef struct {        /* RTCM control struct type */
     ssr_t ssr[MAXSAT];  /* output of ssr corrections */
     char msg[128];      /* special message */
     char msgtype[256];  /* last message type */
+    char cmccmsgtype[256]; /* decode type 4054: proprietary message CMCC---------------------------------*/
     char msmtype[7][128]; /* msm signal types */
     int obsflag;        /* obs data complete flag (1:ok,0:not complete) */
     int ephsat;         /* input ephemeris satellite number */
@@ -930,6 +934,15 @@ typedef struct {        /* RTCM control struct type */
     uint32_t nmsg2[100]; /* message count of RTCM 2 (1-99:1-99,0:other) */
     uint32_t nmsg3[400]; /* message count of RTCM 3 (1-299:1001-1299,300-329:4070-4099,0:ohter) */
     char opt[256];      /* RTCM dependent options */
+    aid_atm_t* aid_atm;
+    aid_sat_t* aid_sat;
+    int naid_atm;
+    int naid_sat;
+    double tow_sat;
+    double tow_atm;
+    aid_sol_t aid_sol;
+    aid_ppl_t aid_ppl;
+	aid_rcv_t aid_rcv[MAXMAC];
 } rtcm_t;
 
 typedef struct {        /* RINEX control struct type */

@@ -120,7 +120,6 @@ ephemeris.o: $(SRC)/rtklib.h
 rinex.o    : $(SRC)/rtklib.h
 ionex.o    : $(SRC)/rtklib.h
 tides.o    : $(SRC)/rtklib.h
-rtcm_buff.o: $(SRC)/rtklib.h $(SRC)/cmcc_aid.h
 
 install:
 	cp rtkrcv $(BINDIR)
