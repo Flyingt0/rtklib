@@ -2677,6 +2677,7 @@ static int decode_type4054(rtcm_t *rtcm)
 	if (rtcm->outtype) {
 		sprintf(rtcm->cmccmsgtype+strlen(rtcm->cmccmsgtype)," ver=%d subtype=%3d",ver, subtype);
     }
+    trace(3,"1111111:%d\n",subtype);
     switch (subtype) {
 		case   1: return decode_aid1__(rtcm);
         case   2: return decode_aid2__(rtcm);
@@ -2736,9 +2737,12 @@ extern int decode_rtcm3(rtcm_t *rtcm)
     
     trace(3,"decode_rtcm3: len=%3d type=%d\n",rtcm->len,type);
     
-    if (rtcm->outtype) {
+    if (rtcm->outtype&&type==4054) {
+		sprintf(rtcm->cmccmsgtype,"RTCM %4d (%4d):",type,rtcm->len);
+	}
+	else if (rtcm->outtype&&type!=4054) {
         sprintf(rtcm->msgtype,"RTCM %4d (%4d):",type,rtcm->len);
-    }
+	}
     /* real-time input option */
     if (strstr(rtcm->opt,"-RT_INP")) {
         tow=time2gpst(utc2gpst(timeget()),&week);
