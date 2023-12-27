@@ -1025,6 +1025,11 @@ typedef struct {        /* processing options type */
     double odisp[2][6*11]; /* ocean tide loading parameters {rov,base} */
     int  freqopt;       /* disable L2-AR */
     char pppopt[256];   /* ppp option */
+
+    /*lyj add*/
+	double RefRovxyz[3];  /*����վ�ο����� ecef*/
+	double dRefRovenu[3]; /*����վ�ο����� enu�仯��*/
+    gtime_t tr;           /* approximate time for rtcm */
 } prcopt_t;
 
 typedef struct {        /* solution options type */
@@ -1136,6 +1141,16 @@ typedef struct {        /* ambiguity control type */
     char flags[MAXSAT]; /* fix flags */
 } ambc_t;
 
+typedef struct {   /*check struct*/
+    int nf;
+    int nm;
+    sol_t fixsolbuf[300];
+    sol_t movecheck[4];
+    double meanfixsol[3];
+    double RefRovxyz[3];
+    double RefRovblh[3];
+} check_t;
+
 typedef struct {        /* RTK control/result type */
     sol_t  sol;         /* RTK solution */
     double rb[6];       /* base position/velocity (ecef) (m|m/s) */
@@ -1149,6 +1164,8 @@ typedef struct {        /* RTK control/result type */
     int neb;            /* bytes in error message buffer */
     char errbuf[MAXERRMSG]; /* error message buffer */
     prcopt_t opt;       /* processing options */
+
+    check_t cc;         /*check struct*/
 } rtk_t;
 
 typedef struct {        /* receiver raw data control type */

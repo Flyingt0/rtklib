@@ -669,6 +669,9 @@ static void prstatus(vt_t *vt)
         rt[1]=floor(runtime/60.0); rt[2]=runtime-rt[1]*60.0;
     }
     for (i=0;i<3;i++) rtcm[i]=svr.rtcm[i];
+    allepoch = svr.allepoch;
+    haepoch = svr.HAepoch;
+    vaepoch = svr.VAepoch;
     rtksvrunlock(&svr);
     
     for (i=n=0;i<MAXSAT;i++) {
@@ -681,7 +684,7 @@ static void prstatus(vt_t *vt)
     dops(n,azel,0.0,dop);
     
     vt_printf(vt,"\n%s%-28s: %s%s\n",ESC_BOLD,"Parameter","Value",ESC_RESET);
-    vt_printf(vt,"%-28s: %s\n","nrtkTest version","ver 1.1.0");
+    vt_printf(vt,"%-28s: %s\n","nrtkTest version","ver 1.2.0");
     vt_printf(vt,"%-28s: %d\n","rtk server thread",thread);
     vt_printf(vt,"%-28s: %s\n","rtk server state",svrstate[state]);
     vt_printf(vt,"%-28s: %d\n","processing cycle (ms)",cycle);

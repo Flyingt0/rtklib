@@ -575,6 +575,11 @@ static void *rtksvrthread(void *arg)
     int i,j,n,fobs[3]={0},cycle,cputime;
     
     tracet(3,"rtksvrthread:\n");
+
+    /*lyj add*/
+	svr->allepoch=0;
+	svr->HAepoch=0;
+	svr->VAepoch=0;
     
     svr->state=1; obs.data=data;
     svr->tick=tickget();
@@ -645,6 +650,10 @@ static void *rtksvrthread(void *arg)
                 /* adjust current time */
                 tt=(int)(tickget()-tick)/1000.0+DTTOL;
                 timeset(gpst2utc(timeadd(svr->rtk.sol.time,tt)));
+
+                svr->allepoch++;
+				if(svr->rtk.sol.HA)  svr->HAepoch++;
+				if(svr->rtk.sol.VA)  svr->VAepoch++;
                 
                 /* write solution */
                 writesol(svr,i);
