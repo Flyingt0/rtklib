@@ -2608,7 +2608,6 @@ static int decode_aidX1_(rtcm_t* rtcm)
     int sys = 0;
     int sync = 0;
     int ret = decode_aidX1(rtcm->buff, rtcm->len + 3, rtcm->aid_sat, &rtcm->naid_sat, MAXSAT, &rtcm->tow_sat, &sys, &sync);
-    trace(3,"2222222:%d\n",ret);
     if (ret)
     {
         if (rtcm->outtype) {
@@ -2623,7 +2622,6 @@ static int decode_aidX2_(rtcm_t* rtcm)
     int sys = 0;
     int sync = 0;
     int ret = decode_aidX2(rtcm->buff, rtcm->len + 3, rtcm->aid_sat, &rtcm->naid_sat, MAXSAT, &rtcm->tow_sat, &sys, &sync);
-    trace(3,"2222222:%d\n",ret);
     if (ret)
     {
         if (rtcm->outtype) {
@@ -2640,7 +2638,6 @@ static int decode_aidX3_(rtcm_t* rtcm)
 	int idx = 0;
 	int rcv = 0;
     int ret = decode_aidX3(rtcm->buff, rtcm->len + 3, rtcm->aid_atm, &rtcm->naid_atm, MAXMAC*MAXOBS, &rtcm->tow_atm, &sys, &sync, &idx, &rcv);
-    trace(3,"2222222:%d\n",ret);
     if (ret)
     {
 		if (rtcm->outtype) {
@@ -2657,7 +2654,6 @@ static int decode_aidX4_(rtcm_t* rtcm)
     int idx = 0;
     int rcv = 0;
     int ret = decode_aidX4(rtcm->buff, rtcm->len + 3, rtcm->aid_atm, &rtcm->naid_atm, MAXMAC * MAXOBS, &rtcm->tow_atm, &sys, &sync, &idx, &rcv);
-    trace(3,"2222222:%d\n",ret);
     if (ret)
     {
         if (rtcm->outtype) {
@@ -2681,7 +2677,6 @@ static int decode_type4054(rtcm_t *rtcm)
 	if (rtcm->outtype) {
 		sprintf(rtcm->cmccmsgtype+strlen(rtcm->cmccmsgtype)," ver=%d subtype=%3d",ver, subtype);
     }
-    trace(3,"1111111:%d\n",subtype);
     switch (subtype) {
 		case   1: return decode_aid1__(rtcm);
         case   2: return decode_aid2__(rtcm);

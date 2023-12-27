@@ -104,11 +104,15 @@ extern int init_rtcm(rtcm_t *rtcm)
     rtcm->obs.data=NULL;
     rtcm->nav.eph =NULL;
     rtcm->nav.geph=NULL;
+    rtcm->aid_sat =NULL;
+    rtcm->aid_atm =NULL;
     
     /* reallocate memory for observation and ephemeris buffer */
     if (!(rtcm->obs.data=(obsd_t *)malloc(sizeof(obsd_t)*MAXOBS))||
         !(rtcm->nav.eph =(eph_t  *)malloc(sizeof(eph_t )*MAXSAT*2))||
-        !(rtcm->nav.geph=(geph_t *)malloc(sizeof(geph_t)*MAXPRNGLO))) {
+        !(rtcm->nav.geph=(geph_t *)malloc(sizeof(geph_t)*MAXPRNGLO))||
+        !(rtcm->aid_sat =(aid_sat_t*)malloc(sizeof(aid_sat_t)*MAXSAT))||
+        !(rtcm->aid_atm =(aid_atm_t*)malloc(sizeof(aid_atm_t)*MAXMAC*MAXOBS))) {
         free_rtcm(rtcm);
         return 0;
     }
@@ -118,6 +122,15 @@ extern int init_rtcm(rtcm_t *rtcm)
     for (i=0;i<MAXOBS   ;i++) rtcm->obs.data[i]=data0;
     for (i=0;i<MAXSAT*2 ;i++) rtcm->nav.eph [i]=eph0;
     for (i=0;i<MAXPRNGLO;i++) rtcm->nav.geph[i]=geph0;
+    rtcm->naid_sat=0;
+    rtcm->naid_atm=0;
+    rtcm->tow_sat =0;
+    rtcm->tow_atm =0;
+    memset( rtcm->aid_sat,0,sizeof(aid_sat_t)*MAXSAT);
+    memset( rtcm->aid_atm,0,sizeof(aid_atm_t)*MAXMAC*MAXOBS);
+    memset( rtcm->aid_rcv,0,sizeof(aid_rcv_t)*MAXMAC);
+    memset(&rtcm->aid_sol,0,sizeof(aid_sol_t));
+    memset(&rtcm->aid_ppl,0,sizeof(aid_ppl_t));
     return 1;
 }
 /* free rtcm control ----------------------------------------------------------
