@@ -1514,7 +1514,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
     int randh,randv,ha_temp,va_temp;
     
     trace(3,"relpos  : nx=%d nu=%d nr=%d\n",rtk->nx,nu,nr);
-    
+
     rtk->sol.solflag=0;
     
     dt=timediff(time,obs[nu].time);
@@ -1733,26 +1733,24 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             /*cal real denu, cal HA, VA*/
             for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-RefRovxyz[i];
 			ecef2enu(RefRovblh, dxyz, denu); /*cal denu*/
-			if ((fabs(denu[0]) >= 3)||(fabs(denu[1]) >= 3)) rtk->sol.HA=1;
-            else rtk->sol.HA=0;
-            if ((fabs(denu[2]) >= 3)) rtk->sol.VA=1;
-            else rtk->sol.VA=0;
+            rtk->sol.HA=0;
+            rtk->sol.VA=0;
+			/* if ((fabs(denu[0]) >= 3)||(fabs(denu[1]) >= 3)) ha_temp=1;
+            if ((fabs(denu[2]) >= 3)) va_temp=1; */
 
-            if (rtk->sol.HA || rtk->sol.VA) {
-                /*cal sol.rr  HPL VPL denu*/
+            /* if (rtk->sol.HA || rtk->sol.VA) {
                 ecef2pos(rtk->sol.rr,pos); soltocov(&rtk->sol,P);  covenu(pos,P,Q);
-                Q[0]+=0.005*0.005; /* add 5 mm in E,N, and U */
+                Q[0]+=0.005*0.005; 
                 Q[4]+=0.005*0.005;
                 Q[8]+=0.005*0.005;
-                rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; /* change to 13 from 6.5 */
-                rtk->sol.VPL=SQRT(Q[8])*15;      /* change to 15 from 7.5 */
+                rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; 
+                rtk->sol.VPL=SQRT(Q[8])*15;      
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-RefRovxyz[i];
-                ecef2enu(RefRovblh, dxyz, denu); /*cal denu*/
+                ecef2enu(RefRovblh, dxyz, denu); 
                 for (i=0;i<3;i++) rtk->sol.enu[i]=denu[i];
                 for (i=0;i<3;i++) rtk->sol.xyz[i]=rtk->sol.rr[i];
             }
-            else {
-                /*cal sol.rr  HPL VPL denu*/
+            else { */
                 ecef2pos(rtk->sol.rr,pos); soltocov(&rtk->sol,P);  covenu(pos,P,Q);
                 Q[0]+=0.005*0.005; /* add 5 mm in E,N, and U */
                 Q[4]+=0.005*0.005;
@@ -1797,7 +1795,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     for (i=0;i<3;i++) rtk->sol.xyz[i]=rtk->sol.rr[i];
                 }
                 
-            }
+            /* } */
         }
         else if ((rtk->cc.nf >= 30) && (rtk->cc.nf < 300)) { /*真实坐标基于前30s和conf*/
             if (stat==SOLQ_FIX) rtk->cc.fixsolbuf[rtk->cc.nf++]=rtk->sol;
