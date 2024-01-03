@@ -1511,7 +1511,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
     double RefRovxyz[3],RefRovblh[3],dRefRovxyz[3],movecheckblh[3];
     double dxyz1[3], dxyz2[3], dxyz3[3], denu1[3], denu2[3], denu3[3];
     double dxyz[3]={0},denu[3]={0},dienu[3],pos[3]={0},P[9],Q[9];
-    int randh,randv,ha_temp,va_temp;
+    int randh,randv,ha_temp=0,va_temp=0;
     
     trace(3,"relpos  : nx=%d nu=%d nr=%d\n",rtk->nx,nu,nr);
 
@@ -1758,7 +1758,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 if (fabs(denu[2])>rtk->sol.VPL) rtk->sol.VA=1;
                 else rtk->sol.VA=0;
 
-                for (i=0;i<3;i++) rtk->sol.enu[i]=denu[i];
+                for (i=0;i<3;i++) rtk->sol.enu[i]=fabs(denu[i]);
                 for (i=0;i<3;i++) rtk->sol.xyz[i]=rtk->sol.rr[i];
             }
             else {
