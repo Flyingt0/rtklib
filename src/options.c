@@ -411,7 +411,6 @@ static void buff2sysopts(void)
     /*lyj add*/
     memcpy(prcopt_.RefRovxyz,prcopt_.ru,3*sizeof(double));
     memcpy(prcopt_.dRefRovenu,prcopt_.antdel[0],3*sizeof(double));
-    trace(1,"xyz:%f  %f  %f    denu:%f  %f  %f  \n",prcopt_.RefRovxyz[0],prcopt_.RefRovxyz[1],prcopt_.RefRovxyz[2],prcopt_.dRefRovenu[0],prcopt_.dRefRovenu[1],prcopt_.dRefRovenu[2]);
     /* excluded satellites */
     for (i=0;i<MAXSAT;i++) prcopt_.exsats[i]=0;
     if (exsats_[0]!='\0') {
