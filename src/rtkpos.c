@@ -1733,24 +1733,34 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             /*cal real denu, cal HA, VA*/
             for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-RefRovxyz[i];
 			ecef2enu(RefRovblh, dxyz, denu); /*cal denu*/
-            rtk->sol.HA=0;
-            rtk->sol.VA=0;
-			/* if ((fabs(denu[0]) >= 3)||(fabs(denu[1]) >= 3)) ha_temp=1;
-            if ((fabs(denu[2]) >= 3)) va_temp=1; */
+            /* rtk->sol.HA=0;
+            rtk->sol.VA=0; */
+			if ((fabs(denu[0]) >= 1)||(fabs(denu[1]) >= 1)) ha_temp=1;
+            if ((fabs(denu[2]) >= 1)) va_temp=1;
 
-            /* if (rtk->sol.HA || rtk->sol.VA) {
+            if (ha_temp || va_temp) {
                 ecef2pos(rtk->sol.rr,pos); soltocov(&rtk->sol,P);  covenu(pos,P,Q);
                 Q[0]+=0.005*0.005; 
                 Q[4]+=0.005*0.005;
                 Q[8]+=0.005*0.005;
-                rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; 
-                rtk->sol.VPL=SQRT(Q[8])*15;      
-                for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-RefRovxyz[i];
-                ecef2enu(RefRovblh, dxyz, denu); 
+                if (stat==SOLQ_FIX) {
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*15;      /* change to 15 from 7.5 */
+                }
+                else {
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*25;      /* change to 15 from 7.5 */
+                }     
+
+                if (SQRT(denu[0]*denu[0]+denu[1]*denu[1])>rtk->sol.HPL) rtk->sol.HA=1;
+                else rtk->sol.HA=0;
+                if (fabs(denu[2])>rtk->sol.VPL) rtk->sol.VA=1;
+                else rtk->sol.VA=0;
+
                 for (i=0;i<3;i++) rtk->sol.enu[i]=denu[i];
                 for (i=0;i<3;i++) rtk->sol.xyz[i]=rtk->sol.rr[i];
             }
-            else { */
+            else {
                 ecef2pos(rtk->sol.rr,pos); soltocov(&rtk->sol,P);  covenu(pos,P,Q);
                 Q[0]+=0.005*0.005; /* add 5 mm in E,N, and U */
                 Q[4]+=0.005*0.005;
@@ -1763,9 +1773,6 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     rtk->sol.HPL=SQRT(Q[0]+Q[4])*20; /* change to 13 from 6.5 */
                     rtk->sol.VPL=SQRT(Q[8])*25;      /* change to 15 from 7.5 */
                 }
-
-                for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-RefRovxyz[i];
-                ecef2enu(RefRovblh, dxyz, denu); /*cal denu*/
 
                 for (i=0;i<3;i++) {
                     if (denu[i] > 0) dienu[i]=1;
@@ -1800,7 +1807,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     for (i=0;i<3;i++) rtk->sol.xyz[i]=rtk->sol.rr[i];
                 }
                 
-            /* } */
+            }
         }
         else if ((rtk->cc.nf >= 30) && (rtk->cc.nf < 300)) { /*真实坐标基于前30s和conf*/
             if (stat==SOLQ_FIX) rtk->cc.fixsolbuf[rtk->cc.nf++]=rtk->sol;
@@ -1808,7 +1815,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             for(i=0;i<3;i++) dxyz[i]=rtk->cc.meanfixsol[i]-RefRovxyz[i];
             /*for(i=0;i<3;i++) dxyz[i]=rtk->cc.fixsolbuf[30].rr[i]-RefRovxyz[i];*/
 			ecef2enu(RefRovblh, dxyz, denu); /*����õ�denu*/
-			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=50)||(fabs(denu[2])>=50)) {  /* convert 0.3 to 50 m */
+			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=0.3)||(fabs(denu[2])>=0.3)) {  /* convert 0.3 to 50 m */
                 memcpy(rtk->cc.RefRovxyz,RefRovxyz,3*sizeof(double));
                 ecef2pos(rtk->cc.RefRovxyz, rtk->cc.RefRovblh);
                 /*cal sol.rr  HPL VPL denu*/
@@ -1900,7 +1907,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             calmeanfixsol(rtk,300);
             for(i=0;i<3;i++) dxyz[i]=rtk->cc.meanfixsol[i]-RefRovxyz[i];
 			ecef2enu(RefRovblh, dxyz, denu); /*denu*/
-			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=50)||(fabs(denu[2])>=50)) {  /* convert 0.3 to 50 m */
+			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=0.3)||(fabs(denu[2])>=0.3)) {  /* convert 0.3 to 50 m */
                 memcpy(rtk->cc.RefRovxyz,RefRovxyz,3*sizeof(double));
                 ecef2pos(rtk->cc.RefRovxyz, rtk->cc.RefRovblh);
                 /*cal sol.rr  HPL VPL denu*/
