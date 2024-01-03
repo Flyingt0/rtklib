@@ -1733,9 +1733,6 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             /*cal real denu, cal HA, VA*/
             for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-RefRovxyz[i];
 			ecef2enu(RefRovblh, dxyz, denu); /*cal denu*/
-            if ((rtk->sol.dRefRovenu[0]!=0)||(rtk->sol.dRefRovenu[1]!=0)||(rtk->sol.dRefRovenu[2]!=0)) {
-                for (i=0;i<3;i++) denu[i]+=rtk->sol.dRefRovenu[i];
-            }
             
             /* rtk->sol.HA=0;
             rtk->sol.VA=0; */
