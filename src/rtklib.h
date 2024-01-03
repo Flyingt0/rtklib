@@ -869,7 +869,8 @@ typedef struct {        /* solution type */
 	double VPL;           
 	int HA;
     int VA;
-	double var;           
+	double var;       
+    int solflag;    
 } sol_t;
 
 typedef struct {        /* solution buffer type */

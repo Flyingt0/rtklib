@@ -1608,7 +1608,10 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 if (f==0) rtk->sol.ns++; /* valid satellite count by L1 */
             }
             /* lack of valid satellites */
-            if (rtk->sol.ns<4) stat=SOLQ_NONE;
+            if (rtk->sol.ns<4) {
+                rtk->sol.solflag=1;/* 该历元解不可靠 */
+                /* stat=SOLQ_NONE; */
+            }
         }
         else stat=SOLQ_NONE;
     }
@@ -1800,7 +1803,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             for(i=0;i<3;i++) dxyz[i]=rtk->cc.meanfixsol[i]-RefRovxyz[i];
             /*for(i=0;i<3;i++) dxyz[i]=rtk->cc.fixsolbuf[30].rr[i]-RefRovxyz[i];*/
 			ecef2enu(RefRovblh, dxyz, denu); /*����õ�denu*/
-			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=0.3)||(fabs(denu[2])>=0.3)) {
+			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=1)||(fabs(denu[2])>=1)) {  /* convert 0.3 to 1 m */
                 memcpy(rtk->cc.RefRovxyz,RefRovxyz,3*sizeof(double));
                 ecef2pos(rtk->cc.RefRovxyz, rtk->cc.RefRovblh);
                 /*cal sol.rr  HPL VPL denu*/
@@ -1881,7 +1884,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             calmeanfixsol(rtk,300);
             for(i=0;i<3;i++) dxyz[i]=rtk->cc.meanfixsol[i]-RefRovxyz[i];
 			ecef2enu(RefRovblh, dxyz, denu); /*denu*/
-			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=0.3)||(fabs(denu[2])>=0.3)) {
+			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=1)||(fabs(denu[2])>=1)) {
                 memcpy(rtk->cc.RefRovxyz,RefRovxyz,3*sizeof(double));
                 ecef2pos(rtk->cc.RefRovxyz, rtk->cc.RefRovblh);
                 /*cal sol.rr  HPL VPL denu*/
@@ -1950,7 +1953,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
 
                 }
                 else {
-                    for (i=0;i<3;i++) rtk->sol.enu[i]=denu[i];
+                    for (i=0;i<3;i++) rtk->sol.enu[i]=denu[i ];
                     for (i=0;i<3;i++) rtk->sol.xyz[i]=rtk->sol.rr[i];
                 }  
             }
