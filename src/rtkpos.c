@@ -1707,7 +1707,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
         }
 
         /*move check*/
-        if (rtk->cc.nm==4) {
+        /*if (rtk->cc.nm==4) {
             ecef2pos(rtk->cc.movecheck[1].rr,movecheckblh);
             for(i=0;i<3;i++) dxyz1[i]=rtk->cc.movecheck[0].rr[i]-rtk->cc.movecheck[1].rr[i];
             ecef2enu(movecheckblh, dxyz1, denu1);
@@ -1725,7 +1725,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             }
             addfixsol2(rtk);
         }
-        else if (rtk->cc.nm<4) rtk->cc.movecheck[rtk->cc.nm++]=rtk->sol;
+        else if (rtk->cc.nm<4) rtk->cc.movecheck[rtk->cc.nm++]=rtk->sol;*/
 
         if (rtk->cc.nf < 30) {/*输出除非特别离谱的，否则不超限*/
             /*append fix sol*/
@@ -1803,7 +1803,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             for(i=0;i<3;i++) dxyz[i]=rtk->cc.meanfixsol[i]-RefRovxyz[i];
             /*for(i=0;i<3;i++) dxyz[i]=rtk->cc.fixsolbuf[30].rr[i]-RefRovxyz[i];*/
 			ecef2enu(RefRovblh, dxyz, denu); /*����õ�denu*/
-			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=1)||(fabs(denu[2])>=1)) {  /* convert 0.3 to 1 m */
+			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=50)||(fabs(denu[2])>=50)) {  /* convert 0.3 to 50 m */
                 memcpy(rtk->cc.RefRovxyz,RefRovxyz,3*sizeof(double));
                 ecef2pos(rtk->cc.RefRovxyz, rtk->cc.RefRovblh);
                 /*cal sol.rr  HPL VPL denu*/
@@ -1811,8 +1811,14 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 Q[0]+=0.005*0.005; /* add 5 mm in E,N, and U */
                 Q[4]+=0.005*0.005;
                 Q[8]+=0.005*0.005;
-                rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; /* change to 13 from 6.5 */
-                rtk->sol.VPL=SQRT(Q[8])*15;      /* change to 15 from 7.5 */
+                if (stat==SOLQ_FIX) {
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*15;      /* change to 15 from 7.5 */
+                }
+                else {
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*25;      /* change to 15 from 7.5 */
+                }
 
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-rtk->cc.RefRovxyz[i];
                 ecef2enu(rtk->cc.RefRovblh, dxyz, denu); /*����õ�denu*/
@@ -1884,7 +1890,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             calmeanfixsol(rtk,300);
             for(i=0;i<3;i++) dxyz[i]=rtk->cc.meanfixsol[i]-RefRovxyz[i];
 			ecef2enu(RefRovblh, dxyz, denu); /*denu*/
-			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=1)||(fabs(denu[2])>=1)) {
+			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=50)||(fabs(denu[2])>=50)) {  /* convert 0.3 to 50 m */
                 memcpy(rtk->cc.RefRovxyz,RefRovxyz,3*sizeof(double));
                 ecef2pos(rtk->cc.RefRovxyz, rtk->cc.RefRovblh);
                 /*cal sol.rr  HPL VPL denu*/
@@ -1892,8 +1898,14 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 Q[0]+=0.005*0.005; /* add 5 mm in E,N, and U */
                 Q[4]+=0.005*0.005;
                 Q[8]+=0.005*0.005;
-                rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; /* change to 13 from 6.5 */
-                rtk->sol.VPL=SQRT(Q[8])*15;      /* change to 15 from 7.5 */
+                if (stat==SOLQ_FIX) {
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*15;      /* change to 15 from 7.5 */
+                }
+                else {
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*25;      /* change to 15 from 7.5 */
+                }
 
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-rtk->cc.RefRovxyz[i];
                 ecef2enu(rtk->cc.RefRovblh, dxyz, denu); /*����õ�denu*/
