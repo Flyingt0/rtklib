@@ -1736,8 +1736,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             
             /* rtk->sol.HA=0;
             rtk->sol.VA=0; */
-			if ((fabs(denu[0]) >= 3)||(fabs(denu[1]) >= 3)) ha_temp=1;
-            if ((fabs(denu[2]) >= 3)) va_temp=1;
+			if ((fabs(denu[0]) >= 3.0)||(fabs(denu[1]) >= 3.0)) ha_temp=1;
+            if ((fabs(denu[2]) >= 3.0)) va_temp=1;
 
             if (ha_temp || va_temp) {
                 ecef2pos(rtk->sol.rr,pos); soltocov(&rtk->sol,P);  covenu(pos,P,Q);
