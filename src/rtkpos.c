@@ -1736,8 +1736,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             
             /* rtk->sol.HA=0;
             rtk->sol.VA=0; */
-			if ((fabs(denu[0]) >= 3.0)||(fabs(denu[1]) >= 3.0)) ha_temp=1;
-            if ((fabs(denu[2]) >= 3.0)) va_temp=1;
+			if ((fabs(denu[0]) >= 1.0)||(fabs(denu[1]) >= 1.0)) ha_temp=1;
+            if ((fabs(denu[2]) >= 1.0)) va_temp=1;
 
             if (ha_temp || va_temp) {
                 ecef2pos(rtk->sol.rr,pos); soltocov(&rtk->sol,P);  covenu(pos,P,Q);
@@ -1745,12 +1745,12 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 Q[4]+=0.005*0.005;
                 Q[8]+=0.005*0.005;
                 if (stat==SOLQ_FIX) {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*15;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*25;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*25.0;      /* change to 15 from 7.5 */
                 }     
 
                 if (SQRT(denu[0]*denu[0]+denu[1]*denu[1])>rtk->sol.HPL) rtk->sol.HA=1;
@@ -1767,17 +1767,17 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 Q[4]+=0.005*0.005;
                 Q[8]+=0.005*0.005;
                 if (stat==SOLQ_FIX) {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*15;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*25;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*25.0;      /* change to 15 from 7.5 */
                 }
 
                 for (i=0;i<3;i++) {
-                    if (denu[i] > 0) dienu[i]=1;
-                    else dienu[i]=-1;
+                    if (denu[i] > 0.0) dienu[i]=1.0;
+                    else dienu[i]=-1.0;
                 }
                 rtk->sol.HA=0;
                 rtk->sol.VA=0;
@@ -1827,12 +1827,12 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 Q[4]+=0.005*0.005;
                 Q[8]+=0.005*0.005;
                 if (stat==SOLQ_FIX) {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*15;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*25;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*25.0;      /* change to 15 from 7.5 */
                 }
 
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-rtk->cc.RefRovxyz[i];
@@ -1855,12 +1855,12 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 Q[4]+=0.005*0.005;
                 Q[8]+=0.005*0.005;
                 if (stat==SOLQ_FIX) {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*15;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*25;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*25.0;      /* change to 15 from 7.5 */
                 }
                 rtk->sol.HA=0;
                 rtk->sol.VA=0;
@@ -1869,8 +1869,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 ecef2enu(rtk->cc.RefRovblh, dxyz, denu); /*cal denu*/
 
                 for (i=0;i<3;i++) {
-                    if (denu[i] > 0) dienu[i]=1;
-                    else dienu[i]=-1;
+                    if (denu[i] > 0) dienu[i]=1.0;
+                    else dienu[i]=-1.0;
                 }
 
                 /*compute ha va  temp*/
@@ -1919,12 +1919,12 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 Q[4]+=0.005*0.005;
                 Q[8]+=0.005*0.005;
                 if (stat==SOLQ_FIX) {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*15;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*25;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*25.0;      /* change to 15 from 7.5 */
                 }
 
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-rtk->cc.RefRovxyz[i];
@@ -1947,12 +1947,12 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 Q[4]+=0.005*0.005;
                 Q[8]+=0.005*0.005;
                 if (stat==SOLQ_FIX) {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*15;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*13.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*25;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*25.0;      /* change to 15 from 7.5 */
                 }
                 rtk->sol.HA=0;
                 rtk->sol.VA=0;
@@ -1961,8 +1961,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 ecef2enu(rtk->cc.RefRovblh, dxyz, denu); 
 
                 for (i=0;i<3;i++) {
-                    if (denu[i] > 0) dienu[i]=1;
-                    else dienu[i]=-1;
+                    if (denu[i] > 0) dienu[i]=1.0;
+                    else dienu[i]=-1.0;
                 }
 
                 /*compute ha va  temp*/
