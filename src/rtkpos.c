@@ -1758,7 +1758,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 if (fabs(denu[2])>rtk->sol.VPL) rtk->sol.VA=1;
                 else rtk->sol.VA=0;
 
-                for (i=0;i<3;i++) rtk->sol.enu[i]=fabs(denu[i]);
+                for (i=0;i<3;i++) rtk->sol.enu[i]=denu[i];
                 for (i=0;i<3;i++) rtk->sol.xyz[i]=rtk->sol.rr[i];
             }
             else {
