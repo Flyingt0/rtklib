@@ -1515,6 +1515,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
     
     trace(3,"relpos  : nx=%d nu=%d nr=%d\n",rtk->nx,nu,nr);
     
+    rtk->sol.solflag=0;
+    
     dt=timediff(time,obs[nu].time);
     
     rs=mat(6,n); dts=mat(2,n); var=mat(1,n); y=mat(nf*2,n); e=mat(3,n);
@@ -1610,7 +1612,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             /* lack of valid satellites */
             if (rtk->sol.ns<4) {
                 rtk->sol.solflag=1;/* 该历元解不可靠 */
-                /* stat=SOLQ_NONE; */
+                stat=SOLQ_NONE; 
             }
         }
         else stat=SOLQ_NONE;
