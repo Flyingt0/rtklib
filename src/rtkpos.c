@@ -2099,14 +2099,15 @@ extern int rtkpos(rtk_t *rtk, const obsd_t *obs, int n, const nav_t *nav)
     time=rtk->sol.time; /* previous epoch */
     
     /* rover position by single point positioning */
-    if (!pntpos(obs,nu,nav,&rtk->opt,&rtk->sol,NULL,rtk->ssat,msg)) {
+    /* if (!pntpos(obs,nu,nav,&rtk->opt,&rtk->sol,NULL,rtk->ssat,msg)) {
         errmsg(rtk,"point pos error (%s)\n",msg);
         
         if (!rtk->opt.dynamics) {
             outsolstat(rtk);
             return 0;
         }
-    }
+    } */
+    rtk->sol.time=obs[0].time;
     if (time.time!=0) rtk->tt=timediff(rtk->sol.time,time);
     
     /* single point positioning */
