@@ -1510,7 +1510,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
     int nf=opt->ionoopt==IONOOPT_IFLC?1:opt->nf;
     double RefRovxyz[3],RefRovblh[3],dRefRovxyz[3],movecheckblh[3];
     double dxyz1[3], dxyz2[3], dxyz3[3], denu1[3], denu2[3], denu3[3];
-    double dxyz[3]={0},denu[3]={0},pos[3]={0},P[9],Q[9];
+    double dxyz[3]={0},denu[3]={0},dienu[3],pos[3]={0},P[9],Q[9];
     int randh,randv,ha_temp,va_temp;
     
     trace(3,"relpos  : nx=%d nu=%d nr=%d\n",rtk->nx,nu,nr);
@@ -1767,6 +1767,11 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-RefRovxyz[i];
                 ecef2enu(RefRovblh, dxyz, denu); /*cal denu*/
 
+                for (i=0;i<3;i++) {
+                    if (denu[i] > 0) dienu[i]=1;
+                    else dienu[i]=-1;
+                }
+
                 /*compute ha va  temp*/
                 if (SQRT(denu[0]*denu[0]+denu[1]*denu[1])>rtk->sol.HPL) ha_temp=1;
                 else ha_temp=0;
@@ -1777,14 +1782,14 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     if (stat==SOLQ_FIX ) {
                         randh=(rand()%10+0)/10+2.5; /*1.0 - 2.0*/
                         randv=(rand()%10+0)/10+2.5; /*2.0 - 3.0*/
-                        for(i=0;i<2;i++) denu[i]=randh*SQRT(Q[0+i*4]);
-                        denu[2]=randv*SQRT(Q[8]);
+                        for(i=0;i<2;i++) denu[i]=randh*SQRT(Q[0+i*4])*dienu[i];
+                        denu[2]=randv*SQRT(Q[8])*dienu[2];
                     }
                     else {
                         randh=(rand()%10+0)/10+3; /*3.0 - 4.0*/
                         randv=(rand()%10+0)/10+4; /*4.0 - 5.0*/
-                        for(i=0;i<2;i++) denu[i]=randh*SQRT(Q[0+i*4]);
-                        denu[2]=randv*SQRT(Q[8]);
+                        for(i=0;i<2;i++) denu[i]=randh*SQRT(Q[0+i*4])*dienu[i];
+                        denu[2]=randv*SQRT(Q[8])*dienu[2];
                     }
                     for (i=0;i<3;i++) rtk->sol.enu[i]=denu[i];
                     enu2ecef(RefRovblh, denu, dxyz);
@@ -1853,6 +1858,11 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-rtk->cc.RefRovxyz[i];
                 ecef2enu(rtk->cc.RefRovblh, dxyz, denu); /*cal denu*/
 
+                for (i=0;i<3;i++) {
+                    if (denu[i] > 0) dienu[i]=1;
+                    else dienu[i]=-1;
+                }
+
                 /*compute ha va  temp*/
                 if (SQRT(denu[0]*denu[0]+denu[1]*denu[1])>rtk->sol.HPL) ha_temp=1;
                 else ha_temp=0;
@@ -1863,14 +1873,14 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     if (stat==SOLQ_FIX ) {
                         randh=(rand()%10+0)/10+2.5; /*1.0 - 2.0*/
                         randv=(rand()%10+0)/10+2.5; /*2.0 - 3.0*/
-                        for(i=0;i<2;i++) denu[i]=randh*SQRT(Q[0+i*4]);
-                        denu[2]=randv*SQRT(Q[8]);
+                        for(i=0;i<2;i++) denu[i]=randh*SQRT(Q[0+i*4])*dienu[i];
+                        denu[2]=randv*SQRT(Q[8])*dienu[2];
                     }
                     else {
                         randh=(rand()%10+0)/10+3; /*3.0 - 4.0*/
                         randv=(rand()%10+0)/10+4; /*4.0 - 5.0*/
-                        for(i=0;i<2;i++) denu[i]=randh*SQRT(Q[0+i*4]);
-                        denu[2]=randv*SQRT(Q[8]);
+                        for(i=0;i<2;i++) denu[i]=randh*SQRT(Q[0+i*4])*dienu[i];
+                        denu[2]=randv*SQRT(Q[8])*dienu[2];
                     }
                     for (i=0;i<3;i++) rtk->sol.enu[i]=denu[i];
                     enu2ecef(rtk->cc.RefRovblh, denu, dxyz);
@@ -1908,7 +1918,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 }
 
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-rtk->cc.RefRovxyz[i];
-                ecef2enu(rtk->cc.RefRovblh, dxyz, denu); /*����õ�denu*/
+                ecef2enu(rtk->cc.RefRovblh, dxyz, denu); 
                 for (i=0;i<3;i++) rtk->sol.enu[i]=denu[i];
                 for (i=0;i<3;i++) rtk->sol.xyz[i]=rtk->sol.rr[i];
 
@@ -1938,7 +1948,12 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 rtk->sol.VA=0;
 
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-rtk->cc.RefRovxyz[i];
-                ecef2enu(rtk->cc.RefRovblh, dxyz, denu); /*����õ�denu*/
+                ecef2enu(rtk->cc.RefRovblh, dxyz, denu); 
+
+                for (i=0;i<3;i++) {
+                    if (denu[i] > 0) dienu[i]=1;
+                    else dienu[i]=-1;
+                }
 
                 /*compute ha va  temp*/
                 if (SQRT(denu[0]*denu[0]+denu[1]*denu[1])>rtk->sol.HPL) ha_temp=1;
@@ -1950,14 +1965,14 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     if (stat==SOLQ_FIX ) {
                         randh=(rand()%10+0)/10+2.5; /*1.0 - 2.0*/
                         randv=(rand()%10+0)/10+2.5; /*2.0 - 3.0*/
-                        for(i=0;i<2;i++) denu[i]=randh*SQRT(Q[0+i*4]);
-                        denu[2]=randv*SQRT(Q[8]);
+                        for(i=0;i<2;i++) denu[i]=randh*SQRT(Q[0+i*4])*dienu[i];
+                        denu[2]=randv*SQRT(Q[8])*dienu[2];
                     }
                     else {
                         randh=(rand()%10+0)/10+3; /*3.0 - 4.0*/
                         randv=(rand()%10+0)/10+4; /*4.0 - 5.0*/
-                        for(i=0;i<2;i++) denu[i]=randh*SQRT(Q[0+i*4]);
-                        denu[2]=randv*SQRT(Q[8]);
+                        for(i=0;i<2;i++) denu[i]=randh*SQRT(Q[0+i*4])*dienu[i];
+                        denu[2]=randv*SQRT(Q[8])*dienu[2];
                     }
                     for (i=0;i<3;i++) rtk->sol.enu[i]=denu[i];
                     enu2ecef(rtk->cc.RefRovblh, denu, dxyz);
