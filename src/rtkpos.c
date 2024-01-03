@@ -1703,7 +1703,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
         if ((rtk->sol.dRefRovenu[0]!=0)||(rtk->sol.dRefRovenu[1]!=0)||(rtk->sol.dRefRovenu[2]!=0)) {
             enu2ecef(RefRovblh, rtk->sol.dRefRovenu, dRefRovxyz);
             ecef2enu(RefRovblh, dRefRovxyz, denu);
-            trace(1,"denu:%f  %f  %f  \n",denu[0],denu[1],denu[2]);
+            trace(1,"denu0:%f  %f  %f  \n",denu[0],denu[1],denu[2]);
             for (i=0;i<3;i++) RefRovxyz[i]+=dRefRovxyz[i];
             ecef2pos(RefRovxyz, RefRovblh);  /* xyz -> blh*/
         }
@@ -1735,6 +1735,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             /*cal real denu, cal HA, VA*/
             for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-RefRovxyz[i];
 			ecef2enu(RefRovblh, dxyz, denu); /*cal denu*/
+            trace(1,"denu1:%f  %f  %f  \n",denu[0],denu[1],denu[2]);
             
             /* rtk->sol.HA=0;
             rtk->sol.VA=0; */
