@@ -1779,6 +1779,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     if (denu[i] > 0) dienu[i]=1;
                     else dienu[i]=-1;
                 }
+                rtk->sol.HA=0;
+                rtk->sol.VA=0;
 
                 /*compute ha va  temp*/
                 if (SQRT(denu[0]*denu[0]+denu[1]*denu[1])>rtk->sol.HPL) ha_temp=1;
