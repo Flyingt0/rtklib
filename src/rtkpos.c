@@ -1727,7 +1727,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
         }
         else if (rtk->cc.nm<4) rtk->cc.movecheck[rtk->cc.nm++]=rtk->sol;*/
 
-        if (rtk->cc.nf < 30) {/*输出除非特别离谱的，否则不超限*/
+        if (rtk->cc.nf < 5) {/*输出除非特别离谱的，否则不超限  5*/
             /*append fix sol*/
             if (stat==SOLQ_FIX) rtk->cc.fixsolbuf[rtk->cc.nf++]=rtk->sol;
             /*cal real denu, cal HA, VA*/
@@ -1736,8 +1736,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             
             /* rtk->sol.HA=0;
             rtk->sol.VA=0; */
-			if ((fabs(denu[0]) >= 1.0)||(fabs(denu[1]) >= 1.0)) ha_temp=1;
-            if ((fabs(denu[2]) >= 1.0)) va_temp=1;
+			if ((fabs(denu[0]) >= 2.0)||(fabs(denu[1]) >= 2.0)) ha_temp=1;
+            if ((fabs(denu[2]) >= 2.0)) va_temp=1;
 
             if (ha_temp || va_temp) {
                 ecef2pos(rtk->sol.rr,pos); soltocov(&rtk->sol,P);  covenu(pos,P,Q);
@@ -1749,8 +1749,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20.0; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*25.0;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*65.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*75.0;      /* change to 15 from 7.5 */
                 }     
 
                 if (SQRT(denu[0]*denu[0]+denu[1]*denu[1])>rtk->sol.HPL) rtk->sol.HA=1;
@@ -1771,8 +1771,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20.0; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*25.0;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*65.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*75.0;      /* change to 15 from 7.5 */
                 }
 
                 for (i=0;i<3;i++) {
@@ -1812,13 +1812,13 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                 
             }
         }
-        else if ((rtk->cc.nf >= 30) && (rtk->cc.nf < 300)) { /*真实坐标基于前30s和conf*/
+        else if ((rtk->cc.nf >= 5) && (rtk->cc.nf < 300)) { /*真实坐标基于前30s和conf*/
             if (stat==SOLQ_FIX) rtk->cc.fixsolbuf[rtk->cc.nf++]=rtk->sol;
-            calmeanfixsol(rtk,30);
+            calmeanfixsol(rtk,5);
             for(i=0;i<3;i++) dxyz[i]=rtk->cc.meanfixsol[i]-RefRovxyz[i];
             /*for(i=0;i<3;i++) dxyz[i]=rtk->cc.fixsolbuf[30].rr[i]-RefRovxyz[i];*/
 			ecef2enu(RefRovblh, dxyz, denu); /*����õ�denu*/
-			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=0.3)||(fabs(denu[2])>=0.3)) {  /* convert 0.3 to 50 m */
+			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=1.0)||(fabs(denu[2])>=1.0)) {  /* convert 0.3 to 50 m */
                 memcpy(rtk->cc.RefRovxyz,RefRovxyz,3*sizeof(double));
                 ecef2pos(rtk->cc.RefRovxyz, rtk->cc.RefRovblh);
                 /*cal sol.rr  HPL VPL denu*/
@@ -1831,8 +1831,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20.0; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*25.0;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*65.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*75.0;      /* change to 15 from 7.5 */
                 }
 
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-rtk->cc.RefRovxyz[i];
@@ -1859,8 +1859,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20.0; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*25.0;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*65.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*75.0;      /* change to 15 from 7.5 */
                 }
                 rtk->sol.HA=0;
                 rtk->sol.VA=0;
@@ -1910,7 +1910,7 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
             calmeanfixsol(rtk,300);
             for(i=0;i<3;i++) dxyz[i]=rtk->cc.meanfixsol[i]-RefRovxyz[i];
 			ecef2enu(RefRovblh, dxyz, denu); /*denu*/
-			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=0.3)||(fabs(denu[2])>=0.3)) {  /* convert 0.3 to 50 m */
+			if ((SQRT(denu[0]*denu[0]+denu[1]*denu[1])>=1.0)||(fabs(denu[2])>=1.0)) {  /* convert 0.3 to 50 m */
                 memcpy(rtk->cc.RefRovxyz,RefRovxyz,3*sizeof(double));
                 ecef2pos(rtk->cc.RefRovxyz, rtk->cc.RefRovblh);
                 /*cal sol.rr  HPL VPL denu*/
@@ -1923,8 +1923,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20.0; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*25.0;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*65.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*75.0;      /* change to 15 from 7.5 */
                 }
 
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-rtk->cc.RefRovxyz[i];
@@ -1951,8 +1951,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*20.0; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*25.0;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*65.0; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*75.0;      /* change to 15 from 7.5 */
                 }
                 rtk->sol.HA=0;
                 rtk->sol.VA=0;
