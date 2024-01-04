@@ -1749,8 +1749,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*65.0; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*75.0;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*97.5; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*112.5;      /* change to 15 from 7.5 */
                 }     
 
                 if (SQRT(denu[0]*denu[0]+denu[1]*denu[1])>rtk->sol.HPL) rtk->sol.HA=1;
@@ -1771,8 +1771,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*65.0; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*75.0;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*97.5; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*112.5;      /* change to 15 from 7.5 */
                 }
 
                 for (i=0;i<3;i++) {
@@ -1831,8 +1831,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*65.0; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*75.0;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*97.5; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*112.5;      /* change to 15 from 7.5 */
                 }
 
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-rtk->cc.RefRovxyz[i];
@@ -1859,8 +1859,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*65.0; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*75.0;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*97.5; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*112.5;      /* change to 15 from 7.5 */
                 }
                 rtk->sol.HA=0;
                 rtk->sol.VA=0;
@@ -1923,8 +1923,8 @@ static int relpos(rtk_t *rtk, const obsd_t *obs, int nu, int nr,
                     rtk->sol.VPL=SQRT(Q[8])*15.0;      /* change to 15 from 7.5 */
                 }
                 else {
-                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*65.0; /* change to 13 from 6.5 */
-                    rtk->sol.VPL=SQRT(Q[8])*75.0;      /* change to 15 from 7.5 */
+                    rtk->sol.HPL=SQRT(Q[0]+Q[4])*97.5; /* change to 13 from 6.5 */
+                    rtk->sol.VPL=SQRT(Q[8])*112.5;      /* change to 15 from 7.5 */
                 }
 
                 for(i=0;i<3;i++) dxyz[i]=rtk->sol.rr[i]-rtk->cc.RefRovxyz[i];
